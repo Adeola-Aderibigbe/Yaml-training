@@ -1,0 +1,26 @@
+# Small school system
+# A school includes : a list of Students(object) and list of Teachers(object)
+# A Student includes: Person(object)
+# A person object includes: name,age,class
+# name is a str type
+# age is a int type
+# class is a str type
+# Teacher: person(object)
+
+---
+person : &person
+ name: Adeola
+ age: !!int 18
+ class: class 1
+
+school: !!omap
+ - students: !!set
+    ? << : *person
+    ? << : *person
+      name: Iruoma
+      age: 50
+ - teachers : !!set
+    ? << : *person
+      name: Mr Adeyemi
+      age: 60
+...
