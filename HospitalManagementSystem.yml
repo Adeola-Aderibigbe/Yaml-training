@@ -1,0 +1,101 @@
+# Hospital : nurses,doctors, a receptionist, pharmacist,patients
+---
+base: &base
+ id: !!int &hospitalId 1
+
+patientStatus: !!pair
+ - status: &Registered Registered 
+ - status: &Unregistered Unregistered
+
+billStatus: !!pair
+ - status: &NotPaid NotPaid
+ - status: &Paid Paid
+ - status: &Overdue Overdue
+
+Hospital: !!omap
+- hospitalId : *hospitalId
+- name: &hospitalName Princess hospital
+
+- Receptionist:
+   <<: *base
+   name: Mr Adeyemi
+   hospital:
+    id: *hospitalId
+    name : *hospitalName 
+
+- Nurses: !!set
+   ? << : *base
+     name: Miss Martha
+     hospital: 
+      id: *hospitalId
+      name: *hospitalName
+
+- Patients: !!set
+   ? Patient1: &patient1
+       <<: *base 
+       name: Mr James 
+       patientStatus: *Registered
+       hospital:
+        id: *hospitalId
+        name : *hospitalName
+       appointments: !!set
+        ? appointment1: &appointment1
+           <<: *base 
+           appointmentTime: 01/12/2023
+       billingManagements: !!set
+        ? billManagement1: &BillManagement1
+           <<: *base 
+           price: 3000
+           billStatus: *Paid
+           appointment: *appointment1
+           outstandingBill: 0
+       drugAdministrations: !!set
+        ? drugAdministration1: &DrugAdministration1
+            <<: *base 
+            drug: malaria drug
+            appointment: *appointment1
+            quantity: 1
+
+- Doctors: !!set
+   ? Doctor1: &doctor1
+       <<: *base 
+       name: Miss Adeola
+       hospital:
+         id: *hospitalId
+         name : *hospitalName 
+       appointments: !!set
+        ?  Appointment1: *appointment1
+           patient: *patient1
+
+- Appointments: !!set
+   ? Appointment1: *appointment1
+     doctor: *doctor1
+
+- Pharmacists: !!set
+   ? Pharmacist1: &Pharmacist1
+       <<: *base 
+       name: Miss Health
+       hospital:
+         id: *hospitalId
+         name : *hospitalName 
+       drugsAdministered: !!set
+        ? DrugAdministration1: *DrugAdministration1
+   
+- DrugAdministration: !!set 
+   ? << : *DrugAdministration1
+     pharmacist: *Pharmacist1 
+
+- Accountant: &accountant
+   <<: *base 
+   name: Miss money
+   hospital:
+     id: *hospitalId
+     name : *hospitalName 
+   billingManagements: !!set 
+    ?  BillManagement1: *BillManagement1
+
+- BillingManagements: !!set 
+   ?  BillManagement1: *BillManagement1
+      accountant: *accountant    
+
+...
